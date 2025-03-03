@@ -38,10 +38,23 @@ const PersonList = ({
     const personName = persons.find((p) => p.id === id).name;
     if (window.confirm(`Delete ${personName}`)) {
       // Calling REST interface for deletion
-      personServices.deletePerson(id).then(() => {
-        setPersons(persons.filter((p) => p.id !== id));
-        handleNotification(`Deleted ${personName}`, "info");
-      });
+      personServices
+        .deletePerson(id)
+        .then(() => {
+          setPersons(persons.filter((p) => p.id !== id));
+          handleNotification(`Deleted ${personName}`, "info");
+        })
+        .catch((error) => {
+          if (error.response?.status === 404) {
+            console.log("enters the switch case 404");
+            handleNotification(
+              `Error deleting ${personName}, does not exist`,
+              "error"
+            );
+          } else {
+            handleNotification(`Error deleting ${personName}`, "error");
+          }
+        });
     }
   };
 
