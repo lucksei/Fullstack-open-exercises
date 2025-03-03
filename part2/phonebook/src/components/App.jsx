@@ -12,14 +12,35 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filterName, setFilterName] = useState("");
+  const [notification, SetNotification] = useState({
+    messageText: null,
+    statusType: "info",
+  });
 
   useEffect(() => {
     personServices.getAllPersons().then((persons) => setPersons(persons));
   }, []); // Calls the api once ("[]")
 
+  const handleNotification = (messageText, statusType) => {
+    SetNotification({
+      messageText,
+      statusType,
+    });
+
+    setTimeout(() => {
+      SetNotification({
+        messageText: null,
+        statusType: "info",
+      });
+    }, 2000);
+  };
+
   return (
     <div>
-      <Notification />
+      <Notification
+        messageText={notification.messageText}
+        statusType={notification.statusType}
+      />
       <h2>Phonebook</h2>
       <FilterForm filterName={filterName} setFilterName={setFilterName} />
       <h2>Add a new</h2>
@@ -30,12 +51,14 @@ const App = () => {
         setNewNumber={setNewNumber}
         persons={persons}
         setPersons={setPersons}
+        handleNotification={handleNotification}
       />
       <h2>Numbers</h2>
       <PersonList
         persons={persons}
         setPersons={setPersons}
         filterName={filterName}
+        handleNotification={handleNotification}
       />
     </div>
   );

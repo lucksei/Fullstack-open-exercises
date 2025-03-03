@@ -20,7 +20,12 @@ const PersonListItem = ({ person, handleDeletePerson }) => {
   );
 };
 
-const PersonList = ({ persons, setPersons, filterName }) => {
+const PersonList = ({
+  persons,
+  setPersons,
+  filterName,
+  handleNotification,
+}) => {
   const personsFiltered = persons.filter((person) => {
     const idxFound = person.name
       .toLowerCase()
@@ -32,11 +37,11 @@ const PersonList = ({ persons, setPersons, filterName }) => {
     // Confirm for person deletion
     const personName = persons.find((p) => p.id === id).name;
     if (window.confirm(`Delete ${personName}`)) {
-      console.log("deleting person with id", id);
       // Calling REST interface for deletion
-      personServices
-        .deletePerson(id)
-        .then(setPersons(persons.filter((p) => p.id !== id)));
+      personServices.deletePerson(id).then(() => {
+        setPersons(persons.filter((p) => p.id !== id));
+        handleNotification(`Deleted ${personName}`, "info");
+      });
     }
   };
 

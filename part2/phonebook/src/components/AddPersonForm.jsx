@@ -7,6 +7,7 @@ const AddPersonForm = ({
   setNewNumber,
   persons,
   setPersons,
+  handleNotification,
 }) => {
   const handleNameChange = (event) => {
     setNewName(event.target.value);
@@ -34,18 +35,17 @@ const AddPersonForm = ({
       const msg = `${oldUser.name} is already added to phonebook. replace the old number with a new one`;
       if (!window.confirm(msg)) return;
       // REST PUT to update the person
-      personServices
-        .updatePerson(oldUser.id, personObject)
-        .then(
-          setPersons(
-            persons.map((p) => (p.id === oldUser.id ? personObject : p))
-          )
+      personServices.updatePerson(oldUser.id, personObject).then(() => {
+        setPersons(
+          persons.map((p) => (p.id === oldUser.id ? personObject : p))
         );
+        handleNotification(`Updated ${personObject.name}`, "info");
+      });
     } else {
       // Request creation in the backend
       personServices.createPerson(personObject).then((person) => {
-        console.log("response from server", person);
         setPersons(persons.concat(person));
+        handleNotification(`Added ${personObject.name}`, "info");
       });
     }
 
