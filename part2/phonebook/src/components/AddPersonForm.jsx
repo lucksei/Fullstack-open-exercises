@@ -1,3 +1,5 @@
+import personServices from "./../services/persons.jsx";
+
 const AddPersonForm = ({
   newName,
   setNewName,
@@ -19,19 +21,33 @@ const AddPersonForm = ({
     const personObject = {
       name: newName,
       number: newNumber,
-      id: persons.length + 1,
+      id: String(persons.length + 1),
     };
 
-    const isDifferent = persons.every(
-      (person) => person.name !== personObject.name
-    );
+    // Check if the person's name is unique
+    const oldUser = persons.find((p) => p.name === newName);
+    const isUnique = oldUser === undefined ? true : false;
 
-    if (!isDifferent) {
-      window.alert(`${newName} is already added to phonebook`);
-      return;
+    // If is not unique replace
+    if (!isUnique) {
+      const msg = `${oldUser.name} is already added to phonebook. replace the old number with a new one`;
+      if (!window.confirm(msg)) return;
+      // REST PUT to update the person
+      personServices
+        .updatePerson(oldUser.id, personObject)
+        .then(
+          setPersons(
+            persons.map((p) => (p.id === oldUser.id ? personObject : p))
+          )
+        );
+    } else {
+      // Request creation in the backend
+      personServices.createPerson(personObject).then((person) => {
+        console.log("response from server", person);
+        setPersons(persons.concat(person));
+      });
     }
 
-    setPersons(persons.concat(personObject));
     setNewName("");
     setNewNumber("");
   };

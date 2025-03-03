@@ -1,14 +1,26 @@
-const PersonListItem = ({ person }) => {
+import personServices from "./../services/persons.jsx";
+
+const DeleteButton = ({ id, handleDeletePerson }) => {
+  return (
+    <button type="submit" onClick={() => handleDeletePerson(id)}>
+      delete
+    </button>
+  );
+};
+
+const PersonListItem = ({ person, handleDeletePerson }) => {
   return (
     <div>
       <span>{person.name}</span>
       <span>, </span>
       <span>{person.number}</span>
+      <span>; </span>
+      <DeleteButton id={person.id} handleDeletePerson={handleDeletePerson} />
     </div>
   );
 };
 
-const PersonList = ({ persons, filterName }) => {
+const PersonList = ({ persons, setPersons, filterName }) => {
   const personsFiltered = persons.filter((person) => {
     const idxFound = person.name
       .toLowerCase()
@@ -16,10 +28,26 @@ const PersonList = ({ persons, filterName }) => {
     return idxFound !== -1 ? true : false;
   });
 
+  const handleDeletePerson = (id) => {
+    // Confirm for person deletion
+    const personName = persons.find((p) => p.id === id).name;
+    if (window.confirm(`Delete ${personName}`)) {
+      console.log("deleting person with id", id);
+      // Calling REST interface for deletion
+      personServices
+        .deletePerson(id)
+        .then(setPersons(persons.filter((p) => p.id !== id)));
+    }
+  };
+
   return (
     <>
       {personsFiltered.map((person) => (
-        <PersonListItem key={person.id} person={person} />
+        <PersonListItem
+          key={person.id}
+          person={person}
+          handleDeletePerson={handleDeletePerson}
+        />
       ))}
     </>
   );
