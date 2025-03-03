@@ -18,7 +18,7 @@ const AddPersonForm = ({
 
   const handleAddPerson = (event) => {
     event.preventDefault();
-    const personObject = {
+    let personObject = {
       name: newName,
       number: newNumber,
       id: String(persons.length + 1),
@@ -30,6 +30,7 @@ const AddPersonForm = ({
 
     // If is not unique replace
     if (!isUnique) {
+      personObject = { ...personObject, id: oldUser.id };
       const msg = `${oldUser.name} is already added to phonebook. replace the old number with a new one`;
       if (!window.confirm(msg)) return;
       // REST PUT to update the person
