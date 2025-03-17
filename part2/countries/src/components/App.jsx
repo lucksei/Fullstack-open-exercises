@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+
+import countriesServices from "./../services/countries.jsx";
 
 import Results from "./Results.jsx";
 
@@ -11,12 +12,7 @@ const App = () => {
   };
 
   useEffect(() => {
-    axios
-      .get("https://studies.cs.helsinki.fi/restcountries/api/all")
-      .then((response) => {
-        setCountries(response.data);
-        console.log("response.data", response.data);
-      });
+    countriesServices.getAllCountries().then((data) => setCountries(data));
   }, []);
 
   return (

@@ -1,3 +1,28 @@
+import { useState, useEffect } from "react";
+
+import weatherService from "./../services/weather.jsx";
+
+const WeatherInfo = ({ country }) => {
+  const [weather, setWeather] = useState(null);
+  useEffect(() => {
+    weatherService
+      .getWeather(country.latlng[0], country.latlng[1])
+      .then((data) => setWeather(data));
+  }, []);
+  return (
+    <div>
+      <div>
+        <span>Temperature: </span>
+        <span>{weather?.main.temp} Celsius</span>
+      </div>
+      <img src={weatherService.getImageUrl(weather?.weather[0].icon)} />
+      <div>
+        <span>Wind: </span>
+        <span>{weather?.wind.speed} m/s</span>
+      </div>
+    </div>
+  );
+};
 const CountryInfo = ({ country }) => {
   return (
     <div>
@@ -11,6 +36,8 @@ const CountryInfo = ({ country }) => {
         ))}
       </ul>
       <img src={country.flags.png} alt={country.flags.alt} />
+      <h3>Weather in {country.capital}</h3>
+      <WeatherInfo country={country} />
     </div>
   );
 };
