@@ -1,7 +1,8 @@
 import axios from "axios";
 // const baseUrl = "http://localhost:3001/api/persons"; // Small adjustment to the base url for exercise for part 3.9
-const baseUrl = "/api/persons"; // Changing base url to relative for deployment in exercise 3.10
-
+// const baseUrl = "/api/persons"; // Changing base url to relative for deployment in exercise 3.10
+const baseUrl =
+  "https://fullstack-open-exercises-part3-w00b.onrender.com/api/persons"; // New base url for deployment in Render for exercise 3.11 (testing locally)
 const getAllPersons = () => {
   return axios.get(baseUrl).then((response) => response.data);
 };
