@@ -1,8 +1,14 @@
 import axios from "axios";
-const baseUrl = "http://localhost:3001/persons";
+// const baseUrl = "http://localhost:3001/api/persons"; // Small adjustment to the base url for exercise for part 3.9
+const baseUrl = "/api/persons"; // Changing base url to relative for deployment in exercise 3.10
 
 const getAllPersons = () => {
   return axios.get(baseUrl).then((response) => response.data);
+};
+
+// New method for connecting to the backend for part 3.9
+const getPersonById = (id) => {
+  return axios.get(`${baseUrl}/${id}`).then((response) => response.data);
 };
 
 const createPerson = (newPersonObject) => {
